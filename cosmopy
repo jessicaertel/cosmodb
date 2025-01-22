@@ -1,0 +1,45 @@
+//armazena
+
+from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
+
+# Configurações
+connection_string = "SUA_STRING_DE_CONEXÃO"
+container_name = "seu-container"
+
+# Inicialização do cliente de armazenamento
+blob_service_client = BlobServiceClient.from_connection_string(connection_string)
+container_client = ContainerClient.from_container_name(container_name, blob_service_client)
+
+# Listar blobs em um contêiner
+blobs_list = container_client.list_blobs()
+for blob in blobs_list:
+    print(blob.name)
+
+# Filtro de blobs com um prefixo específico
+filtered_blobs = container_client.list_blobs(name_starts_with="prefixo")
+for blob in filtered_blobs:
+    print(blob.name)
+
+//cosmo db
+from azure.cosmos import CosmosClient, PartitionKey, exceptions
+
+# Configurações
+endpoint = "SUA_ENDPOINT_DE_CONEXÃO"
+key = "SUA_CHAVE_DE_ACESSO"
+database_name = "seu-banco-de-dados"
+container_name = "seu-contêiner"
+
+# Inicialização do cliente Cosmos
+client = CosmosClient(endpoint, key)
+database = client.get_database_client(database_name)
+container = database.get_container_client(container_name)
+
+# Listar documentos em uma coleção
+items = list(container.query_items("SELECT * FROM c"))
+for item in items:
+    print(item['id'])
+
+# Filtro de documentos com uma condição específica
+filtered_items = list(container.query_items("SELECT * FROM c WHERE c.id = 'id_especifico'"))
+for item in filtered_items:
+    print(item['id'])
